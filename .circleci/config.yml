@@ -73,6 +73,8 @@ jobs:
             git commit -m "Increase version to $VERSION [ci skip]"
             git push circleci master
 
+      - <<: *persist_to_workspace
+
   deploy:
     docker:
       - image: google/cloud-sdk
@@ -86,11 +88,6 @@ jobs:
     steps:
       - <<: *attach_workspace
       - <<: *set_gcp_auth
-      - run:
-          name: Increase version file to next minor version
-          command: |
-            sh files/version.sh
-            VERSION=$(head -n 1 VERSION) # load $VERSION from file
 
       - <<: *set_gcp_auth
 
