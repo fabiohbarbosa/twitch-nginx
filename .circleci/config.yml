@@ -99,7 +99,7 @@ jobs:
           name: Set kubernetes cluster
           command: |
             gcloud config set container/use_client_certificate True
-            gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $CLOUD
+            gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $GCP_PROJECT
 
       - run:
           name: Create service.yaml kubernetes deploy file
