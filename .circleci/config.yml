@@ -106,7 +106,7 @@ jobs:
           name: Create service.yaml kubernetes deploy file
           command: |
             VERSION=$(head -n 1 VERSION) # load $VERSION from file
-            bash files/generate_kubectl_file.sh
+            bash files/deploy_kubernetes.sh $VERSION
 
       - run:
           name: Kubernetes apply
