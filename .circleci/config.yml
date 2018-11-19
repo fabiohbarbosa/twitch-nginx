@@ -48,7 +48,7 @@ jobs:
 
       - run:
           name: Increase version file to next minor version
-          command: sh files/version.sh
+          command: bash files/version.sh
 
       - run: 
           name: Build docker image
