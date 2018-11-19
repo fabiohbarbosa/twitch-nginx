@@ -91,6 +91,7 @@ jobs:
       GROUP: frontend
       SERVICENAME: nginx
       ENVIRONMENT: prod
+      REPLICAS: 3
 
     steps:
       - <<: *attach_workspace
