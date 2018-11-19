@@ -85,8 +85,8 @@ jobs:
       - image: google/cloud-sdk
     environment:
       GCP_PROJECT: twitch-223000
-
       CLUSTER: twitch
+      CLUSTER_ZONE: europe-west1-c
       GROUP: frontend
       SERVICENAME: nginx
       ENVIRONMENT: prod
