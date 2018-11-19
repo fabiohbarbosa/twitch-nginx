@@ -48,12 +48,12 @@ jobs:
 
       - <<: *set_gcp_auth
 
-      # - run: 
-      #     name: Push docker image to GCP dev registry
-      #     command: |
-      #       VERSION=$(head -n 1 VERSION) # load $VERSION from file
-      #       docker push gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION
-      #       echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION pushed!"
+      - run: 
+          name: Push docker image to GCP dev registry
+          command: |
+            VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            docker push gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION
+            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION pushed!"
 
       - run:
           name: Configure git to push
