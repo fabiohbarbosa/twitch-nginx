@@ -1,2 +1,3 @@
 .circleci
 files/version.sh
+files/service.yaml

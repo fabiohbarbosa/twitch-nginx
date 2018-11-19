@@ -73,6 +73,42 @@ jobs:
             git commit -m "Increase version to $VERSION [ci skip]"
             git push circleci master
 
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      GCP_PROJECT: twitch-223000
+      GROUP: frontend
+      SERVICENAME: nginx
+      ENVIRONMENT: prod
+
+    steps:
+      - run:
+          name: Increase version file to next minor version
+          command: |
+            sh files/version.sh
+            VERSION=$(head -n 1 VERSION) # load $VERSION from file
+
+      - <<: *set_gcp_auth
+
+      - run:
+          name: Set kubernetes cluster
+          command: |
+            gcloud config set container/use_client_certificate True
+            gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $CLOUD
+
+      - run:
+          name: Create service.yaml kubernetes deploy file
+          command: |
+            source package_version # load $VERSION variable
+            bash .circleci/kubectl_file.sh
+
+      - run:
+          name: Kubernetes apply
+          command: kubectl apply -f service.yaml
+
+
+
 workflows:
   version: 2
   build_and_deploy:
@@ -81,3 +117,10 @@ workflows:
           context: twitch-envs
           filters:
             <<: *only_master
+
+      - deploy:
+          context: twitch-envs
+          filters:
+            <<: *only_master
+          requires:
+            - build
