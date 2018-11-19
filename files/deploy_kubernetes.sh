@@ -42,8 +42,7 @@ spec:
         app: frontend-nginx
     spec:
       containers:
-
-      - name: frontend-nginx-nginx
+      - name: frontend-nginx
         image: gcr.io/$GCP_PROJECT/frontend/nginx:$VERSION
         env:
           - name: ENVIRONMENT
