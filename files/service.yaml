@@ -3,7 +3,7 @@ set -e # ensure that this script will return a non-0 status code if any of rhe c
 set -o pipefail # ensure that this script will return a non-0 status code if any of rhe commands fail
 
 gcloud config set container/use_client_certificate True
-gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $CLOUD
+gcloud container clusters get-credentials $CLUSTER --zone $CLUSTER_ZONE --project $GCP_PROJECT
 
 cat << EOF > service.yaml
 
@@ -27,7 +27,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 
 metadata:
-  name: frontend-splitter
+  name: frontend-nginx
   labels:
     imageTag: 'v.$VERSION'
 spec:
@@ -40,12 +40,12 @@ spec:
   template:
     metadata:
       labels:
-        app: frontend-splitter
+        app: frontend-nginx
     spec:
       containers:
 
-      - name: frontend-splitter-nginx
-        image: gcr.io/$CLOUD/frontend/splitter-nginx:v.$VERSION
+      - name: frontend-nginx-nginx
+        image: gcr.io/$CLUSTER_NAME/frontend/splitter-nginx:v.$VERSION
         env:
           - name: ENVIRONMENT
             value: $ENVIRONMENT
@@ -74,7 +74,5 @@ spec:
             memory: 200Mi
 
 EOF
-
 cat service.yaml
-
 kubectl apply -f service.yaml
