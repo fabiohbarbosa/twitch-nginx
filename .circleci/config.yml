@@ -12,8 +12,9 @@ set_gcp_auth: &set_gcp_auth
     name: Set GCP auth
     command: | 
       echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
+      cat ${HOME}/gcp-key.json
       gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-      gcloud auth configure-docker
+      gcloud auth configure-docker --quiet
 
 only_master: &only_master
   branches:
@@ -53,8 +54,8 @@ jobs:
           name: Push docker image to GCP dev registry
           command: |
             VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION"
             docker push gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION
-            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION pushed!"
 
       - run:
           name: Configure git to push
