@@ -92,6 +92,7 @@ jobs:
       ENVIRONMENT: prod
 
     steps:
+        <<: *working_directory
       - <<: *attach_workspace
       - <<: *set_gcp_auth
 
@@ -110,8 +111,6 @@ jobs:
       - run:
           name: Kubernetes apply
           command: kubectl apply -f service.yaml
-
-
 
 workflows:
   version: 2
