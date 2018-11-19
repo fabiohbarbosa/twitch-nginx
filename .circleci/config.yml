@@ -11,8 +11,9 @@ set_gcp_auth: &set_gcp_auth
   run:
     name: Set GCP auth
     command: | 
-      echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json && gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-      gcloud auth configure-docker --quiet
+      echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
+      gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+      gcloud auth configure-docker
 
 only_master: &only_master
   branches:
@@ -43,8 +44,8 @@ jobs:
           name: Build docker image
           command: | 
             VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION"
             docker build -t gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION .
-            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION builded!"
 
       - <<: *set_gcp_auth
 
@@ -63,7 +64,6 @@ jobs:
             git config --global user.name "CircleCI"
             git config --global user.email fabiohbarbosa@gmail.com
             git remote add circleci https://fabiohbarbosa:${GITHUB_TOKEN}@github.com/fabiohbarbosa/twitch-nginx.git
-
 
       - run:
           name: Push version file
