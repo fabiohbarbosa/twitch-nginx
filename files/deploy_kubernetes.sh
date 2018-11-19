@@ -28,7 +28,7 @@ kind: Deployment
 metadata:
   name: frontend-nginx
   labels:
-    imageTag: 'v.$VERSION'
+    imageTag: '$VERSION'
 spec:
   revisionHistoryLimit: 15
   replicas: $REPLICAS
@@ -44,7 +44,7 @@ spec:
       containers:
 
       - name: frontend-nginx-nginx
-        image: gcr.io/$GCP_PROJECT/frontend/splitter-nginx:v.$VERSION
+        image: gcr.io/$GCP_PROJECT/frontend/nginx:$VERSION
         env:
           - name: ENVIRONMENT
             value: $ENVIRONMENT
