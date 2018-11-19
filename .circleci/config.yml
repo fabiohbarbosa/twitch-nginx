@@ -84,6 +84,8 @@ jobs:
       ENVIRONMENT: prod
 
     steps:
+      - <<: *attach_workspace
+      - <<: *set_gcp_auth
       - run:
           name: Increase version file to next minor version
           command: |
