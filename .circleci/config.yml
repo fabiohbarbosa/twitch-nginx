@@ -94,7 +94,7 @@ jobs:
       CLUSTER: twitch
       CLUSTER_ZONE: europe-west1-c
       ENVIRONMENT: prod
-      REPLICAS: 3
+      REPLICAS: 1
 
     steps:
       - <<: *attach_workspace
