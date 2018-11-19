@@ -81,6 +81,7 @@ jobs:
       - <<: *persist_to_workspace
 
   deploy:
+    <<: *working_directory
     docker:
       - image: google/cloud-sdk
     environment:
@@ -92,7 +93,6 @@ jobs:
       ENVIRONMENT: prod
 
     steps:
-        <<: *working_directory
       - <<: *attach_workspace
       - <<: *set_gcp_auth
 
