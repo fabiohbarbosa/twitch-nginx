@@ -6,11 +6,14 @@ if [ -z "$CURRENT_VERSION" ]; then
     exit 0
 fi
 
-MINOR_VERSION=$(printf ${CURRENT_VERSION} | tail -c 1)
+ARRAY=($(echo $CURRENT_VERSION | tr '.' "\n"))
+MINOR_VERSION=${ARRAY[2]}
 NEXT_MINOR=$((${MINOR_VERSION} + 1))
-NEXT_VERSION=$(printf "${CURRENT_VERSION%?}${NEXT_MINOR}")
+NEXT_VERSION=$(printf "${ARRAY[0]}.${ARRAY[1]}.${NEXT_MINOR}")
 
 echo ${CURRENT_VERSION}
 echo ${MINOR_VERSION}
+echo ${NEXT_MINOR}
+echo ${NEXT_VERSION}
 
 printf ${NEXT_VERSION} > VERSION
