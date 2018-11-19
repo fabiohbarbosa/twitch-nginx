@@ -3,6 +3,11 @@ version: 2
 working_directory: &working_directory
   working_directory: ~/repo
 
+persist_to_workspace: &persist_to_workspace
+  persist_to_workspace:
+    root: ~/repo
+    paths: ./**
+
 attach_workspace: &attach_workspace
   attach_workspace:
     at: ~/repo
