@@ -104,8 +104,8 @@ jobs:
       - run:
           name: Create service.yaml kubernetes deploy file
           command: |
-            source package_version # load $VERSION variable
-            bash .circleci/kubectl_file.sh
+            VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            bash files/generate_kubectl_file.sh
 
       - run:
           name: Kubernetes apply
