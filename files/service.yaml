@@ -45,7 +45,7 @@ spec:
       containers:
 
       - name: frontend-nginx-nginx
-        image: gcr.io/$CLUSTER_NAME/frontend/splitter-nginx:v.$VERSION
+        image: gcr.io/$GCP_PROJECT/frontend/splitter-nginx:v.$VERSION
         env:
           - name: ENVIRONMENT
             value: $ENVIRONMENT
