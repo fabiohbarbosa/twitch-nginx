@@ -12,9 +12,7 @@ set_gcp_auth: &set_gcp_auth
     name: Set GCP auth
     command: | 
       echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
-      cat ${HOME}/gcp-key.json
       gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-      gcloud auth configure-docker --quiet
 
 only_master: &only_master
   branches:
