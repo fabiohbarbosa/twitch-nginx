@@ -1,0 +1,83 @@
+version: 2
+
+working_directory: &working_directory
+  working_directory: ~/repo
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: ~/repo
+
+set_gcp_auth: &set_gcp_auth
+  run:
+    name: Set GCP auth
+    command: | 
+      echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json && gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+      gcloud auth configure-docker --quiet
+
+only_master: &only_master
+  branches:
+    only:
+      - master
+
+jobs:
+  build:
+    <<: *working_directory
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      GCP_PROJECT: twitch-223000
+      GROUP: frontend
+      SERVICENAME: nginx
+    steps:
+      - checkout
+
+      # Enable DIND feature
+      - setup_remote_docker:
+         docker_layer_caching: true
+
+      - run:
+          name: Increase version file to next minor version
+          command: sh files/version.sh
+
+      - run: 
+          name: Build docker image
+          command: | 
+            VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            docker build -t gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION .
+            echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION builded!"
+
+      - <<: *set_gcp_auth
+
+      # - run: 
+      #     name: Push docker image to GCP dev registry
+      #     command: |
+      #       VERSION=$(head -n 1 VERSION) # load $VERSION from file
+      #       docker push gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION
+      #       echo "gcr.io/$GCP_PROJECT/$GROUP/$SERVICENAME:$VERSION pushed!"
+
+      - run:
+          name: Configure git to push
+          command: |
+            rm -rf ${HOME}/.gitconfig
+            git config --global push.default simple
+            git config --global user.name "CircleCI"
+            git config --global user.email fabiohbarbosa@gmail.com
+            git remote add circleci https://fabiohbarbosa:${GITHUB_TOKEN}@github.com/fabiohbarbosa/twitch-nginx.git
+
+
+      - run:
+          name: Push version file
+          command: |
+            VERSION=$(head -n 1 VERSION) # load $VERSION from file
+            git add VERSION
+            git commit -m "Increase version to $VERSION [ci skip]"
+            git push circleci master
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          context: twitch-envs
+          filters:
+            <<: *only_master
