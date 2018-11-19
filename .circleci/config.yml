@@ -1,17 +1,21 @@
 version: 2
 
+# working directory to use in all jobs
 working_directory: &working_directory
   working_directory: ~/repo
 
+# archive workspace
 persist_to_workspace: &persist_to_workspace
   persist_to_workspace:
     root: ~/repo
     paths: ./**
 
+# get archive files
 attach_workspace: &attach_workspace
   attach_workspace:
     at: ~/repo
 
+# configure gcloud authetication
 set_gcp_auth: &set_gcp_auth
   run:
     name: Set GCP auth
@@ -20,6 +24,7 @@ set_gcp_auth: &set_gcp_auth
       gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
       gcloud auth configure-docker --quiet
 
+# configure job to run only on master branch
 only_master: &only_master
   branches:
     only:
