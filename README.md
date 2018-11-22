@@ -8,4 +8,4 @@ An NGINX server which sits in front of the entire infrastructure and is responsi
 - Kubernetes Healthcheck: http://35.244.227.171/healthcheck
 
 ## CI latest report
-![Latest Report](https://drive.google.com/open?id=1k9qtctcfz1PSJkz3XPmVts1Lyc1sVx5D)
+[Latest Report](https://drive.google.com/open?id=1k9qtctcfz1PSJkz3XPmVts1Lyc1sVx5D)
